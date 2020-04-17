@@ -1,76 +1,60 @@
-// Variables
-var resultEl = document.getElementById('result');
-var lengthEl = document.getElementById('length');
-var upperCaseEl = document.getElementById('upperCase');
-var lowerCaseEl = document.getElementById('lowerCase');
-var numberEl = document.getElementById('number');
-var symbolsEl = document.getElementById('symbols');
-var generateEl = document.getElementById('generate');
-var clipboardEl = document.getElementById('clipboard');
+var upper = ["ABCEDFGHIJKLMNOPQRSTUVWXYZ"];
+var lower = ["abcdefghijklmnopqrstuvwxyz"];
+var alpha = ["0123456789"];
+var special = ["!,#$%^&*()~+=<>|?"];
+var charSet = "";
 
-let randomFunc = {
-    lower: getRandomLower,
-    upper: getRandomUpper,
-    number: getRandomNumber,
-    symbol: getRandomSymbol
-};
+var confUpper = document.getElementById("upperCase");
+var confLower = document.getElementById("lowerCase");
+var confAlpha = document.getElementById("numbers");
+var confSpecials = document.getElementById("specialCharacters");
+var password ="";
 
-// Generate event listener
-generateEl.addEventListener('click', function() {
-    let length = + lengthEl.value;
-    let hasLower = lowerCaseEl.checked;
-    let hasUpper = upperCaseEl.checked;
-    let hasNumber = numberEl.checked;
-    let hasSymbol = symbolsEl.checked;
+var charNo = document.getElementById("charBox");
 
-    resultEl.innerText = generatePassword(hasLower,hasUpper,hasNumber,hasSymbol, length);
-});
+// If statments for check boxes
+function generate() {
+  // Upper Letters
+    if (confUpper.checked == true) {
+    charSet += upper;
+    console.log(charSet);
+  }
+  // Lower Letters
+  if (confLower.checked == true) {
+    charSet += lower;
+    console.log(charSet);
+  }
+  // Numbers
+  if (confSpecials.checked == true) {
+    charSet += special;
+    console.log(charSet);
+  } 
+  // Special Characters
+  if (confAlpha.checked == true) {
+    charSet += alpha;
+    console.log(charSet);
+  }
+  // No checked boxes
+  if (confLower.checked !== true && confUpper.checked !== true && confAlpha !== true && confSpecials !== true) {
+    alert("Please select at least one character type")
+  }
 
-// Generate password function
-function generatePassword(lower, upper, number, symbol, length) {
-    // 1. Password variable
-    // 2. Filter out unchecked
-    // 3. Loop over length -> call generator function for each type
-    // 4. add final password to the variable and return
-
-    let generatePassword = '';
-
-    var typesCount = lower + upper + number + symbol;
-
-    let typesArr = [{ lower }, { upper }, { number }, { symbol }].filter(item => Object.values(item)[0]);
-
-    if(typesCount === 0) {
-        return '';
+// Determining password length
+  for (var i = 0; i < charNo.value; i++) {
+      password += charSet.charAt(Math.floor(Math.random() * charSet.length));
+      console.log(password);
     }
+  // Display Password
+  return document.getElementById("password").innerText = password;
+  }
 
-    for(let i = 0; i < length; i += typesCount) {
-        typesArr.forEach(type => {
-            const funcName = object.keys(type)[0];
 
-            generatePassword += randomRunc[funcName]();
-        });
-    }
-    let finalPassword = generatedPassword.slice(0, length);
+  var copyText = document.getElementById("copy");
+  
+  copyText.addEventListener("click" , copy);
 
-    return finalPassword;
-}
-
-// Generator functions - http://www.net-comber.com/charset.html
-function getRandomLower() {
-    return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-}
-
-function getRandomUpper() {
-    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-}
-
-function getRandomNumber() {
-    return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
-}
-
-function getRandomSymbol() {
-    const symbols = '!"#$%&()*+,-./:;<=>?@[\]^_`{|}~';
-    return symbols[Math.floor(Math.random() * symbols.length)];
-}
-
-console.log(getRandomLower());
+  function copy(e) {
+    document.querySelector("#password").select();
+    document.execCommand("Copy");
+    e.preventDefault();
+  }
